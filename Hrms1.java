@@ -1,16 +1,20 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import java.time.Duration;
+import java.util.Scanner;
 import static java.lang.Math.random;
 
-class Log{
+class Logi{
     WebDriver d=new ChromeDriver();
     String username="divyash07"+random();
+    Select drag;
+
     void login(){
         d.get("https://opensource-demo.orangehrmlive.com/");
         d.manage().window().maximize();
@@ -18,6 +22,11 @@ class Log{
         a.sendKeys("Admin");
         d.findElement(By.id("txtPassword")).sendKeys("admin123");
         d.findElement(By.id("btnLogin")).click();
+    }
+    void logout(){
+        d.findElement(By.xpath("//a[@id='welcome']")).click();
+        d.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        d.findElement(By.xpath("//a[contains(text(),'Logout')]")).click();
     }
     void add_user(){
         d.findElement(By.linkText("PIM")).click();
@@ -40,28 +49,33 @@ class Log{
         System.out.println(actualName.getText());
         Assert.assertEquals("Name is not added successfully",expectedName,actualName.getText());
     }
-    void recruit() throws InterruptedException {
+    void recruit(String date,String dat) throws InterruptedException {
         d.findElement(By.linkText("Recruitment")).click();
         d.findElement(By.linkText("Candidates")).click();
-        Select drag = new Select(d.findElement(By.id("candidateSearch_jobTitle")));
-        drag.selectByValue("25");
-        Thread.sleep(3000);
-        drag = new Select(d.findElement(By.id("candidateSearch_jobVacancy")));
-        drag.selectByVisibleText("Payroll Administrator");
-        Thread.sleep(3000);
-        drag = new Select(d.findElement(By.id("candidateSearch_hiringManager")));
+        drag= new Select(d.findElement(By.id("candidateSearch_jobTitle")));
         drag.selectByValue("7");
         Thread.sleep(3000);
+        drag = new Select(d.findElement(By.id("candidateSearch_jobVacancy")));
+        drag.selectByValue("1");
+        Thread.sleep(3000);
+        drag = new Select(d.findElement(By.id("candidateSearch_hiringManager")));
+        drag.selectByValue("2");
+        Thread.sleep(2000);
         d.findElement(By.id("candidateSearch_fromDate")).clear();
-        //d.findElement(By.id("candidateSearch_fromDate")).sendKeys("2022-02-01");
-        for(int y=2022;y<2023;y++){
-            for (int m = 3; m <= 12; m++) {
-                for (int da = 1; da <= 31; da++) {
-                    d.findElement(By.id("candidateSearch_fromDate")).sendKeys("y-m-da");
-                    Thread.sleep(1000);
-                }
-            }
-        }
+        d.findElement(By.id("candidateSearch_fromDate")).sendKeys(date);
+        d.findElement(By.id("candidateSearch_toDate")).clear();
+        d.findElement(By.id("candidateSearch_toDate")).sendKeys(dat);
+        Thread.sleep(2000);
+        d.findElement(By.id("btnSrch")).click();
+    }
+    void info(){
+        d.findElement(By.linkText("My Info")).click();
+        JavascriptExecutor js = (JavascriptExecutor) d;
+        js.executeScript("window.scrollBy(0,250)", "");
+        d.findElement(By.id("btnSave")).click();
+        d.findElement(By.id("btnSave")).click();
+        d.findElement(By.id("btnAddAttachment")).click();
+        d.findElement(By.id("ufile")).click();
     }
     void delete_user(){
         d.findElement(By.linkText("PIM")).click();
@@ -75,24 +89,24 @@ class Log{
         d.findElement(By.id("dialogDeleteBtn")).click();
         d.manage().timeouts().implicitlyWait(Duration.ofSeconds(3000));
     }
-    void logout(){
-        d.findElement(By.xpath("//a[@id='welcome']")).click();
-        d.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        d.findElement(By.xpath("//a[contains(text(),'Logout')]")).click();
-    }
 }
 
 
-public class Hrms1 extends Log {
+public class Hrms1 extends Logi {
     public static void main(String[] args) throws InterruptedException{
+        System.out.println("Enter search from date as YYYY-MM-DD");
+        Scanner obj=new Scanner(System.in);
+        String date=obj.nextLine();
+        System.out.println("Enter search to date as YYYY-MM-DD");
+        String dat=obj.nextLine();
         WebDriverManager.chromedriver().setup();
-        Log l=new Log();
+        Logi l=new Logi();
         l.login();
         //l.add_user();
         Thread.sleep(3000);
         //l.verify_user();
-        l.recruit();
-        l.d.manage().timeouts().implicitlyWait(Duration.ofSeconds(3000));
+        //l.info();
+        l.recruit(date,dat);
         //l.logout();
     }
 }
