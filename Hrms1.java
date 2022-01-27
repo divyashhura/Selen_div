@@ -102,7 +102,7 @@ public class Hrms1 extends Logi {
         l.add_user(fname,lname,uname,password);
         Thread.sleep(3000);
         l.verify_user(uname);
-        //l.delete(uname);
+        //l.delete_user(uname);
         //l.recruit(date,dat);
         //l.logout();
     }
