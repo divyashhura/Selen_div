@@ -12,15 +12,15 @@ import static java.lang.Math.random;
 
 class Logi{
     WebDriver d=new ChromeDriver();
-    String username="divyash07"+random();
+
     Select drag;
 
-    void login(){
-        d.get("https://opensource-demo.orangehrmlive.com/");
+    void login(String url,String username,String pass){
+        d.get(url);
         d.manage().window().maximize();
         WebElement a=d.findElement(By.name("txtUsername"));
-        a.sendKeys("Admin");
-        d.findElement(By.id("txtPassword")).sendKeys("admin123");
+        a.sendKeys(username);
+        d.findElement(By.id("txtPassword")).sendKeys(pass);
         d.findElement(By.id("btnLogin")).click();
     }
     void logout(){
@@ -28,21 +28,22 @@ class Logi{
         d.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         d.findElement(By.xpath("//a[contains(text(),'Logout')]")).click();
     }
-    void add_user(){
+    void add_user(String fname,String lname,String uname,String pass){
         d.findElement(By.linkText("PIM")).click();
         d.findElement(By.linkText("Add Employee")).click();
-        d.findElement(By.id("firstName")).sendKeys("Divyash");
-        d.findElement(By.id("lastName")).sendKeys("Singh");
+        d.findElement(By.id("firstName")).sendKeys(fname);
+        d.findElement(By.id("lastName")).sendKeys(lname);
         d.findElement(By.id("chkLogin")).click();
-        d.findElement(By.id("user_name")).sendKeys(username);
-        d.findElement(By.id("user_password")).sendKeys("Divyash70");
-        d.findElement(By.id("re_password")).sendKeys("Divyash70");
+        d.findElement(By.id("user_name")).sendKeys(uname);
+        d.findElement(By.id("user_password")).sendKeys(pass);
+        d.findElement(By.id("re_password")).sendKeys(pass);
         d.findElement(By.id("btnSave")).click();
+        System.out.println("username is: "+uname);
     }
-    void verify_user(){
+    void verify_user(String uname){
         d.findElement(By.linkText("Admin")).click();
         d.findElement(By.id("menu_admin_UserManagement")).click();
-        d.findElement(By.id("searchSystemUser_userName")).sendKeys(username);
+        d.findElement(By.id("searchSystemUser_userName")).sendKeys(uname);
         d.findElement(By.id("searchBtn")).click();
         String expectedName = "Divyash Singh";
         WebElement actualName = d.findElement(By.xpath("//td[contains(text(),'Divyash Singh')]"));
@@ -68,19 +69,10 @@ class Logi{
         Thread.sleep(2000);
         d.findElement(By.id("btnSrch")).click();
     }
-    void info(){
-        d.findElement(By.linkText("My Info")).click();
-        JavascriptExecutor js = (JavascriptExecutor) d;
-        js.executeScript("window.scrollBy(0,250)", "");
-        d.findElement(By.id("btnSave")).click();
-        d.findElement(By.id("btnSave")).click();
-        d.findElement(By.id("btnAddAttachment")).click();
-        d.findElement(By.id("ufile")).click();
-    }
-    void delete_user(){
+    void delete_user(String uname){
         d.findElement(By.linkText("PIM")).click();
         d.findElement(By.linkText("Employee List")).click();
-        d.findElement(By.id("empsearch_id")).sendKeys("");
+        d.findElement(By.id("empsearch_id")).sendKeys("uid");
         d.findElement(By.id("searchBtn")).click();
         d.findElement(By.name("chkSelectRow[]")).click();
         d.manage().timeouts().implicitlyWait(Duration.ofSeconds(3000));
@@ -94,19 +86,24 @@ class Logi{
 
 public class Hrms1 extends Logi {
     public static void main(String[] args) throws InterruptedException{
-        System.out.println("Enter search from date as YYYY-MM-DD");
-        Scanner obj=new Scanner(System.in);
-        String date=obj.nextLine();
-        System.out.println("Enter search to date as YYYY-MM-DD");
-        String dat=obj.nextLine();
+        String username="admin";
+        String pass="admin123";
+        String fname="divyash",lname="Singh",password="Divyash70";
+        String uname="divyash07"+random();
+        String url="https://opensource-demo.orangehrmlive.com/";
+        //System.out.println("Enter search from date as YYYY-MM-DD");
+        //Scanner obj=new Scanner(System.in);
+        //String date=obj.nextLine();
+        //System.out.println("Enter search to date as YYYY-MM-DD");
+        //String dat=obj.nextLine();
         WebDriverManager.chromedriver().setup();
         Logi l=new Logi();
-        l.login();
-        //l.add_user();
+        l.login(url,username,pass);
+        l.add_user(fname,lname,uname,password);
         Thread.sleep(3000);
-        //l.verify_user();
-        //l.info();
-        l.recruit(date,dat);
+        l.verify_user(uname);
+        //l.delete_user(uname);
+        //l.recruit(date,dat);
         //l.logout();
     }
 }
