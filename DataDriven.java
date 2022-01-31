@@ -9,7 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class Assignment2{
+public class DataDriven {
    void launch(String url) throws IOException, InterruptedException {
         String uname,pass;
         WebDriver d=new ChromeDriver();
@@ -44,7 +44,7 @@ public class Assignment2{
 
     public static void main(String[] args) throws IOException, InterruptedException {
         WebDriverManager.chromedriver().setup();
-        Assignment2 a=new Assignment2();
+        DataDriven a=new DataDriven();
         String u="https://opensource-demo.orangehrmlive.com/";
         a.launch(u);
     }
